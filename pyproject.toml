@@ -1,0 +1,11 @@
+[project]
+name = "haxball-room-orchestrator"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi==0.140.0",
+    "httpx==0.28.1",
+    "pydantic==2.13.4",
+    "redis==8.0.1",
+    "uvicorn==0.51.0",
+]

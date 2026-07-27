@@ -1,0 +1,19 @@
+services:
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+
+  orchestrator:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - ORCHESTRATOR_WEBHOOK_URL=${ORCHESTRATOR_WEBHOOK_URL}
+    depends_on:
+      - redis
+
+volumes:
+  redis_data:
