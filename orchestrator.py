@@ -1,3 +1,4 @@
+import asyncio
 import json
 import os
 
@@ -8,6 +9,14 @@ from pydantic import BaseModel
 from redis import Redis
 
 import config
+
+_debounce_task: asyncio.Task | None = None
+
+
+async def _debounced_sync():
+    await asyncio.sleep(config.DEBOUNCE_SECONDS)
+    await sync_discord_message()
+
 
 app = FastAPI()
 
@@ -59,6 +68,11 @@ async def sync_discord_message():
 
 @app.post("/event")
 async def receive_event(event: RoomEvent):
-    r.hset(ROOM_KEY, event.room_name, json.dumps(event.model_dump()))
-    await sync_discord_message()
+    global _debounce_task
+    r.hset(ROOM_KEY, event.room_name, json.dumps(event.dict()))
+
+    if _debounce_task and not _debounce_task.done():
+        _debounce_task.cancel()
+
+    _debounce_task = asyncio.create_task(_debounced_sync())
     return {"ok": True}
