@@ -40,7 +40,7 @@ async function notifyOrchestrator(room, roomLink, roomName, maxPlayers) {
         console.error("Failed to notify orchestrator:", err);
     }
 }
-
+room.onRoomLink = (link) => notifyOrchestrator(room, link, "Room 1", 10);
 room.onPlayerJoin = (player) => notifyOrchestrator(room, "https://www.haxball.com/play?c=abc123", "Room 1", 10);
 room.onPlayerLeave = (player) => notifyOrchestrator(room, "https://www.haxball.com/play?c=abc123", "Room 1", 10);
 ```
@@ -63,7 +63,7 @@ function notifyOrchestrator(room, roomLink, roomName, maxPlayers) {
         console.error("Failed to notify orchestrator:", err);
     });
 }
-
+room.onRoomLink = (link) => notifyOrchestrator(room, link, "Room 1", 10);
 room.onPlayerJoin = (player) => notifyOrchestrator(room, "https://www.haxball.com/play?c=abc123", "Room 1", 10);
 room.onPlayerLeave = (player) => notifyOrchestrator(room, "https://www.haxball.com/play?c=abc123", "Room 1", 10);
 ```
